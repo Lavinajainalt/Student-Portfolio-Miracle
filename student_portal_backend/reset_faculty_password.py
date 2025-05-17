@@ -1,0 +1,1 @@
+from core.models import CustomUser; user = CustomUser.objects.get(username='faculty'); user.set_password('faculty123'); user.save(); print(f'Password for {user.username} has been reset to: faculty123') 

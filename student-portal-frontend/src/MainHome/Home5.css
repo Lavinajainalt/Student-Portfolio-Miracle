@@ -1,0 +1,140 @@
+.testimonial-slider {
+  max-width: 900px;
+  margin: 60px auto;
+  background: #DDE0F2;
+  padding: 40px 30px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(108, 99, 255, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2e2e4d;
+  position: relative;
+}
+.testimonial-slider-container{
+  background-color: #f1f2f9;
+}
+
+.slider-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #3a3671;
+  margin-bottom: 35px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.slider-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.arrow {
+  background: #6c63ff;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  padding: 12px 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.arrow:hover {
+  background: #574fd6;
+}
+
+.testimonial-content {
+  display: flex;
+  background: #f5f3ff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(108, 99, 255, 0.1);
+  padding: 25px 35px;
+  flex: 1;
+  gap: 30px;
+  align-items: center;
+  min-height: 160px;
+}
+
+.photo-container {
+  flex-shrink: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(108, 99, 255, 0.2);
+  border: 3px solid #6c63ff;
+}
+
+.photo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-box {
+  flex: 1;
+}
+
+.testimonial-text {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #444466;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.testimonial-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #2e2e4d;
+  margin-bottom: 5px;
+}
+
+.testimonial-role {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #7a78a0;
+}
+
+.slider-thumbnails {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  user-select: none;
+}
+
+.thumbnail {
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid transparent;
+  box-shadow: 0 4px 15px rgba(108, 99, 255, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbnail.active {
+  border-color: #6c63ff;
+  box-shadow: 0 6px 25px rgba(108, 99, 255, 0.4);
+}
+
+.slide-count {
+  text-align: center;
+  margin-top: 18px;
+  font-weight: 600;
+  color: #6c63ff;
+  font-size: 1rem;
+  user-select: none;
+}

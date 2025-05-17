@@ -1,0 +1,47 @@
+.illustration-wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 50px auto 20px;
+  }
+  
+  .phone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1a1a;
+    border-radius: 50%;
+    padding: 20px;
+    color: white;
+    z-index: 2;
+  }
+  
+  .orbit {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: rotate 10s linear infinite;
+    transform-origin: center;
+  }
+  
+  .icon {
+    position: absolute;
+    background: white;
+    color: #3f2b96;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 20px;
+  }
+  
+  .icon1 { top: 0%; left: 50%; transform: translate(-50%, -50%); }
+  .icon2 { top: 20%; right: 0%; transform: translate(50%, -50%); }
+  .icon3 { bottom: 20%; right: 0%; transform: translate(50%, 50%); }
+  .icon4 { bottom: 0%; left: 50%; transform: translate(-50%, 50%); }
+  .icon5 { top: 20%; left: 0%; transform: translate(-50%, -50%); }
+  
+  @keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

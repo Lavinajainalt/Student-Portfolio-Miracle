@@ -1,0 +1,548 @@
+.contact-container {
+  padding: 0px 0px;
+  width: 1200px;
+  height: 120vh;
+  margin: 0 auto;
+  font-family: 'Poppins', Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e7ebf0 0%, #e4e8f0 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Background elements */
+.contact-container::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+  z-index: 0;
+}
+
+.contact-container::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -100px;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+  z-index: 0;
+}
+
+/* Split Layout */
+.contact-split-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  min-height: 500px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Left Side - Contact Heading */
+.contact-heading-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 20px;
+  position: relative;
+}
+
+.contact-heading-section h1 {
+  font-size: 3.8rem;
+  color: #2d3748;
+  margin-bottom: 15px;
+  position: relative;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.contact-heading-section h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #4a90e2, #63b3ed);
+  border-radius: 2px;
+}
+
+.contact-subtitle {
+  font-size: 1.4rem;
+  color: #4a5568;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.contact-info {
+  margin-top: 50px;
+  position: relative;
+}
+
+.contact-info::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: #e2e8f0;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  transition: transform 0.3s ease;
+}
+
+.contact-method:hover {
+  transform: translateX(5px);
+}
+
+.contact-icon {
+  font-size: 1.8rem;
+  margin-right: 20px;
+  color: #4a90e2;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(74, 144, 226, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.15);
+  transition: all 0.3s ease;
+}
+
+.contact-method:hover .contact-icon {
+  background-color: #4a90e2;
+  color: white;
+  transform: scale(1.1);
+}
+
+.contact-method p {
+  margin: 0;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+/* Right Side - Phone Animation */
+.phone-animation-section {
+  flex: 1;
+  min-width: 450px;
+  position: relative;
+  height: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Floating elements around phone */
+.phone-animation-section::before,
+.phone-animation-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: float 4s infinite ease-in-out;
+}
+
+.phone-animation-section::before {
+  width: 20px;
+  height: 20px;
+  top: 20%;
+  left: 10%;
+  background-color: rgba(52, 152, 219, 0.2);
+}
+
+.phone-animation-section::after {
+  width: 30px;
+  height: 30px;
+  bottom: 30%;
+  right: 15%;
+  background-color: rgba(52, 152, 219, 0.15);
+  animation-delay: 2s;
+}
+
+/* Additional floating elements */
+.phone-animation-section::before,
+.phone-animation-section::after {
+  box-shadow: 
+    80px 120px 0 rgba(52, 152, 219, 0.1),
+    -120px 200px 0 rgba(52, 152, 219, 0.1),
+    200px -50px 0 rgba(52, 152, 219, 0.1);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.2); }
+}
+
+/* Phone in the center */
+.center-phone {
+  position: relative;
+  width: 480px;
+  height: 780px;
+  margin: 0 auto;
+  animation: phoneFloat 6s infinite ease-in-out;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
+}
+
+@keyframes phoneFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.phone-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  position: relative;
+  z-index: 5;
+  max-width: none;
+  transform: scale(1.2); /* Scale up the image more */
+}
+
+.phone-screen {
+  position: absolute;
+  top: 50%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  width: 55%;
+  height: 65%;
+  background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+  border-radius: 15px;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Phone Screen Content */
+.phone-screen-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.phone-screen-content.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.phone-screen-content h3 {
+  font-size: 2rem;
+  color: #4a90e2;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: 600;
+  background: linear-gradient(90deg, #4a90e2, #63b3ed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Screen 1: 24/7 Support with People */
+.phone-people {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.phone-people-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 10px;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: bounce 2s infinite;
+  transition: transform 0.3s ease;
+}
+
+.phone-people-image:hover {
+  transform: scale(1.2);
+}
+
+.phone-people-image:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.phone-people-image:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.support-icons {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.support-icon {
+  font-size: 2rem;
+  margin: 0 15px;
+  animation: pulse 2s infinite;
+  background-color: rgba(74, 144, 226, 0.1);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.support-icon:hover {
+  background-color: rgba(74, 144, 226, 0.2);
+  transform: scale(1.2);
+}
+
+.support-icon:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.support-icon:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.always-available {
+  font-weight: bold;
+  color: #4a90e2;
+  margin-top: 15px;
+  font-size: 1rem;
+  padding: 5px 15px;
+  background-color: rgba(74, 144, 226, 0.1);
+  border-radius: 20px;
+  animation: glow 2s infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(74, 144, 226, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(74, 144, 226, 0.5); }
+}
+
+/* Screen 2: Consultation */
+.consultation-icon {
+  font-size: 3.5rem;
+  margin: 20px 0;
+  animation: pulse 2s infinite;
+  background-color: rgba(74, 144, 226, 0.1);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.consultation-info {
+  text-align: center;
+  width: 100%;
+}
+
+.consultation-info p {
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+  color: #4a5568;
+}
+
+.consultation-options {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.consultation-option {
+  text-align: center;
+  background-color: rgba(74, 144, 226, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  width: 45%;
+}
+
+.consultation-option:hover {
+  background-color: rgba(74, 144, 226, 0.1);
+  transform: translateY(-5px);
+}
+
+.consultation-option span {
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.consultation-option p {
+  font-size: 0.85rem;
+  margin: 0;
+  color: #4a5568;
+}
+
+/* Screen 3: Contact Form */
+.phone-form {
+  width: 100%;
+  padding: 5px;
+}
+
+.phone-form-field {
+  margin-bottom: 12px;
+}
+
+.phone-form-field label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.phone-input {
+  width: 100%;
+  height: 25px;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.phone-input:hover {
+  border-color: #cbd5e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.phone-textarea {
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.phone-textarea:hover {
+  border-color: #cbd5e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.phone-button {
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 80%;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+  transition: all 0.3s ease;
+}
+
+.phone-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+}
+
+/* Screen indicators */
+.screen-indicators {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  margin: 0 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.indicator:hover {
+  background-color: #cbd5e0;
+}
+
+.indicator.active {
+  background-color: #3498db;
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 40px 15px;
+  }
+  
+  .contact-split-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .contact-heading-section {
+    text-align: center;
+    padding: 0;
+  }
+  
+  .contact-heading-section h1 {
+    font-size: 2.8rem;
+  }
+  
+  .contact-heading-section h1::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .contact-info::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .contact-method {
+    justify-content: center;
+  }
+  
+  .phone-animation-section {
+    order: -1; /* Show animation first on mobile */
+    margin-bottom: 20px;
+    height: 750px;
+  }
+  
+  .center-phone {
+    width: 350px;
+    height: 680px;
+  }
+}

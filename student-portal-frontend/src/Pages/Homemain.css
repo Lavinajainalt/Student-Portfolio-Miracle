@@ -36,21 +36,6 @@
   padding: 0.7rem 2.5rem;
 }
 
-/* Hero Section */
-.hero-section-1 {
-  height: 80vh;
-  min-height: 600px;
-  background-image: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-align: center;
-  margin-bottom: 4rem;
-}
 
 .hero-overlay {
   position: absolute;
@@ -83,48 +68,6 @@
   font-weight: 300;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
-.hero-buttons {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-.hero-btn {
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 180px;
-}
-
-.hero-btn.primary {
-  background: white;
-  color: var(--primary-color);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.hero-btn.primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-}
-
-.hero-btn.secondary {
-  background: transparent;
-  color: white;
-  border: 2px solid white;
-}
-
-.hero-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
-}
-
 
 
 

@@ -1,118 +1,121 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./Home5.css"; // Import your CSS file for styling
+import React from "react";
+import "./Home5.css";
 
-
- const testimonials = [
+const testimonials = [
   {
-    id: 1,
-    name: "Rajesh Kumar",
-    role: "CEO, Victory Co.",
-    photo: "https://www.shutterstock.com/image-photo/portrait-happy-indian-teenager-college-260nw-2159627891.jpg",
-    text: "I would like to say a big Thank you for your immense effort and support. In addition, I have feeling that our further events are going to be Great as well, good luck to the team.",
+    text: "The AI assistant helps me solve doubts instantly.",
+    name: "Riya Sharma (Student)",
+    avatar: "https://randomuser.me/api/portraits/women/21.jpg"
   },
   {
-    id: 2,
-    name: "Priya Sharma",
-    role: "Marketing Manager",
-    photo: "https://th.bing.com/th/id/OIP.TLqzGCaCQoTHoNXcMhIa5wHaE8?cb=iwp2&w=612&h=408&rs=1&pid=ImgDetMain",
-    text: "Amazing platform with great instructors! It helped me level up my career and connect with professionals in the industry.",
+    text: "Fee management dashboard is very intuitive.",
+    name: "Mr. Khanna (Admin)",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg"
   },
   {
-    id: 3,
-    name: "Amit Singh",
-    role: "Software Engineer",
-    photo: "https://th.bing.com/th/id/OIP.F9YOpXgr0zYBgM1fwBSQcAHaLH?cb=iwp2&w=600&h=900&rs=1&pid=ImgDetMain",
-    text: "The courses are very detailed and up to date. The hands-on projects helped me get real-world experience quickly.",
+    text: "Tracking attendance has never been easier.",
+    name: "Prof. Anil Verma (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/men/45.jpg"
   },
   {
-    id: 4,
-    name: "Sneha Patel",
-    role: "Product Designer",
-    photo: "https://media.istockphoto.com/id/1301397300/photo/portrait-of-young-woman-stock-photo.jpg?s=612x612&w=0&k=20&c=Xvgo-k58_woBTuQaRNZ4JXP2SQsw_RSbrlSbt7XbQlU=",
-    text: "I love the community support and the quality of content. The flexible schedule helped me learn while working full-time.",
+    text: "Voice-enabled chatbot is amazing for accessibility.",
+    name: "Samar Iqbal (Student)",
+    avatar: "https://randomuser.me/api/portraits/men/36.jpg"
   },
   {
-    id: 5,
-    name: "Vikram Joshi",
-    role: "Cloud Architect",
-    photo: "https://img.freepik.com/premium-photo/indian-students-isolated-white-background_988871-9.jpg",
-    text: "Highly recommend this to anyone serious about tech careers. The instructors are top-notch and very supportive.",
+    text: "Analytics panel gives great insights.",
+    name: "Dr. Rajeev Nair (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/men/53.jpg"
   },
+  {
+    text: "Dark mode is a blessing!",
+    name: "Niharika (Student)",
+    avatar: "https://randomuser.me/api/portraits/women/34.jpg"
+  },
+  {
+    text: "Lecture uploads are super fast now.",
+    name: "Mr. Yadav (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/men/41.jpg"
+  },
+  {
+    text: "The portal reduced my admin workload.",
+    name: "Principal Roy",
+    avatar: "https://randomuser.me/api/portraits/men/55.jpg"
+  },
+  {
+    text: "Class notifications are never missed now.",
+    name: "Aanya Mehta (Student)",
+    avatar: "https://randomuser.me/api/portraits/women/29.jpg"
+  },
+  {
+    text: "Online exam proctoring works great.",
+    name: "Mr. Raghav Pandey (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/men/29.jpg"
+  },
+  {
+    text: "Daily schedule is clearly visible and helpful.",
+    name: "Tanya Jain (Student)",
+    avatar: "https://randomuser.me/api/portraits/women/25.jpg"
+  },
+  {
+    text: "Parent-teacher meetings are better coordinated.",
+    name: "Mrs. Menon (Admin)",
+    avatar: "https://randomuser.me/api/portraits/women/45.jpg"
+  },
+  {
+    text: "Performance reports are easy to generate.",
+    name: "Dr. Sameer Joshi (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/men/37.jpg"
+  },
+  {
+    text: "I'm able to connect with teachers quickly.",
+    name: "Aarav Desai (Student)",
+    avatar: "https://randomuser.me/api/portraits/men/27.jpg"
+  },
+  {
+    text: "The system feels made for Indian schools.",
+    name: "Sneha Kulkarni (Faculty)",
+    avatar: "https://randomuser.me/api/portraits/women/19.jpg"
+  },
+  {
+    text: "No more queues for fee payments!",
+    name: "Vedant Saxena (Student)",
+    avatar: "https://randomuser.me/api/portraits/men/39.jpg"
+  }
 ];
 
+function VerticalTestimonialSlider() {
+  const columnsCount = 4;
 
-
-export default function TestimonialSlider() {
-  const [current, setCurrent] = useState(0);
-  const length = testimonials.length;
-  const timeoutRef = useRef(null);
-
-  // Auto-slide every 5 seconds
-  useEffect(() => {
-    const nextSlide = () => {
-      setCurrent((prev) => (prev === length - 1 ? 0 : prev + 1));
-    };
-
-    timeoutRef.current = setTimeout(nextSlide, 5000);
-
-    return () => clearTimeout(timeoutRef.current);
-  }, [current, length]);
-
-  const prevSlide = () => {
-    clearTimeout(timeoutRef.current);
-    setCurrent(current === 0 ? length - 1 : current - 1);
-  };
-
-  const nextSlide = () => {
-    clearTimeout(timeoutRef.current);
-    setCurrent(current === length - 1 ? 0 : current + 1);
-  };
+  const columns = Array.from({ length: columnsCount }, (_, colIndex) =>
+    testimonials.filter((_, i) => i % columnsCount === colIndex)
+  );
 
   return (
-    <div className="testimonial-slider-container">
-    <div className="testimonial-slider">
-      <h2 className="slider-title">Hear From Our Success Stories</h2>
-
-      <div className="slider-main">
-        <button className="arrow left" onClick={prevSlide} aria-label="Previous testimonial">
-          &#8592;
-        </button>
-
-        <div className="testimonial-content">
-          <div className="photo-container">
-            <img src={testimonials[current].photo} alt={testimonials[current].name} />
-          </div>
-          <div className="text-box">
-            <p className="testimonial-text">“{testimonials[current].text}”</p>
-            <p className="testimonial-name">{testimonials[current].name}</p>
-            <p className="testimonial-role">{testimonials[current].role}</p>
-          </div>
-        </div>
-
-        <button className="arrow right" onClick={nextSlide} aria-label="Next testimonial">
-          &#8594;
-        </button>
-      </div>
-
-      <div className="slider-thumbnails">
-        {testimonials.map((t, idx) => (
-          <div
-            key={t.id}
-            className={`thumbnail ${idx === current ? "active" : ""}`}
-            onClick={() => {
-              clearTimeout(timeoutRef.current);
-              setCurrent(idx);
-            }}
-          >
-            <img src={t.photo} alt={t.name} />
+    <section className="slider-section">
+ <h2 className="slider-heading">What Our Students Say</h2>
+  <p className="slider-subheading">
+    Real voices from learners, faculty, and administrators at Miracle IT Career Academy.
+  </p>
+      <div className="slider-wrapper">
+        {columns.map((col, i) => (
+          <div key={i} className={`column ${i % 2 === 0 ? "up" : "down"}`}>
+            {[...col, ...col].map((entry, j) => (
+              <div className="slider-card" key={j}>
+                <img className="avatar" src={entry.avatar} alt={entry.name} />
+                <div>
+                  <div>{entry.text}</div>
+                  <div style={{ fontSize: "13px", color: "#666", marginTop: 4 }}>
+                    {entry.name}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
-
-      <p className="slide-count">
-        {current + 1} / {length}
-      </p>
-    </div>
-    </div>
+    </section>
   );
 }
+
+export default VerticalTestimonialSlider;

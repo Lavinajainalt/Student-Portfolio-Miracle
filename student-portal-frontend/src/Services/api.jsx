@@ -247,7 +247,7 @@ const apiService = {
       return { valid: false, error: error.response?.data || error.message };
     }
   },
-  
+
   // User endpoints
   getUser: async (id) => {
     try {
@@ -269,7 +269,7 @@ const apiService = {
       }
     }
   },
-  
+
   updateUserProfile: async (id, userData) => {
     try {
       const response = await axiosInstance.put(`users/${id}/`, userData);
@@ -290,7 +290,7 @@ const apiService = {
       }
     }
   },
-  
+
   // Contact form
   submitContactForm: async (formData) => {
     try {
@@ -306,6 +306,28 @@ const apiService = {
         return { 
           success: false, 
           message: error.response.data.message || error.response.data.detail || 'Failed to submit contact form',
+          error: error.response.data 
+        };
+      } else {
+        return { 
+          success: false, 
+          message: 'Network error. Please try again later.',
+          error: error.message
+        };
+      }
+    }
+  },
+
+  // New function to get user course videos
+  getUserCourseVideos: async () => {
+    try {
+      const response = await axiosInstance.get('user/videos/');
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return { 
+          success: false, 
+          message: error.response.data.message || error.response.data.detail || 'Failed to fetch videos',
           error: error.response.data 
         };
       } else {

@@ -7,8 +7,7 @@ class CustomUser(AbstractUser):
         ('faculty', 'Faculty'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
-    
-    # Add custom related_name attributes to avoid the clash
+  
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',
@@ -30,24 +29,24 @@ class CustomUser(AbstractUser):
         return self.username
 
 class Subject(models.Model):
-    SUBJECT_CHOICES = (
-        ('PGDFE', 'Post Graduate Diploma in Frontend Engineering'),
-        ('DATA_SCIENCE', 'Data Science'),
-        ('CYBER_SECURITY', 'Cyber Security'),
-    )
-    name = models.CharField(max_length=20, choices=SUBJECT_CHOICES)
-    description = models.TextField(blank=True, null=True)
-    
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+
     def __str__(self):
-        return self.get_name_display()
+        return self.name
 
 class StudentSubject(models.Model):
-    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='subjects')
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    enrollment_date = models.DateField(auto_now_add=True)
-    
-    class Meta:
-        unique_together = ('student', 'subject')
-        
+    student = models.ForeignKey('CustomUser', on_delete=models.CASCADE)
+    subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
+
     def __str__(self):
         return f"{self.student.username} - {self.subject.name}"
+
+class Video(models.Model):
+    title = models.CharField(max_length=200)
+    video_url = models.URLField()
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='videos')
+
+    def __str__(self):
+        return f"{self.title} - {self.subject.name}"
+    

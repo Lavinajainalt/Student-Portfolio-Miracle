@@ -9,6 +9,9 @@ import FacultyDashboard from './Dashboard/FacultyDashboard';
 import Home from './Pages/Home';
 import Maincontact from './Pages/Maincontact';
 import About from './Pages/About';
+import Quiz from './MainHome/Quiz';
+import Community from './Pages/Community';
+import CommunityPage from './Pages/CommunityCenter';
 
 import Courses from './Pages/Course';
 
@@ -20,8 +23,17 @@ function App() {
         <Route path="/select-role" element={<UserRoleSelect />} />
         <Route path="/faculty-login" element={<Faculty />} />
         <Route path="/student-login" element={<Student />} />
+        <Route path="/quiz" element={<Quiz />} />
         
         {/* Protected Routes */}
+        <Route 
+          path="/communitycenter" 
+          element={
+            <ProtectedRoute>
+              <CommunityPage />
+            </ProtectedRoute>
+          } 
+        />
         <Route 
           path="/home" 
           element={

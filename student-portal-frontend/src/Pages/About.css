@@ -1019,7 +1019,7 @@
 .values-section {
   padding: 60px 40px;
   text-align: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto 60px;
 }
 
@@ -1333,4 +1333,66 @@
   .stats-wrapper {
     padding: 2rem 1.5rem;
   }
+}
+.about-hero1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0f8ff;
+  padding: 0rem 3rem;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.about-content1 {
+  max-width: 600px;
+  z-index: 2;
+}
+
+.about-title1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.highlight1 {
+  color: #2563eb;
+}
+
+.about-text1 {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  color: #4b5563;
+}
+
+.about-image-container {
+  position: relative;
+  width: 450px;
+  max-width: 100%;
+  z-index: 1;
+}
+
+.about-image {
+  width: 100%;
+  border-radius: 1rem;
+  position: relative;
+  z-index: 2;
+}
+.wave-lines-vertical {
+  position: absolute;
+  top: -90px;
+  right: -80px;
+  width: 600px;  /* narrower width */
+  height: 250%;   /* taller height */
+  opacity: 0.4;
+  z-index: 0;
+  animation: floatWaveVertical 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes floatWaveVertical {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
 }

@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser
 from .serializers import UserSerializer
+from .models import StudentSubject, Video
+from .serializers import VideoSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
@@ -54,3 +56,21 @@ def login_view(request):
             'success': False,
             'message': f'No {role} account found with this username'
         }, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_course_videos(request):
+    user = request.user
+    print(f"Authenticated user: {user.username}, role: {user.role}")
+    
+    if user.role != 'student':
+        return Response({"error": "Only students can access videos."}, status=403)
+
+    subjects = StudentSubject.objects.filter(student=user).values_list('subject', flat=True)
+    print("Student subjects:", list(subjects))
+
+    videos = Video.objects.filter(subject__in=subjects)
+    print("Videos found:", videos)
+
+    serializer = VideoSerializer(videos, many=True)
+    return Response(serializer.data)

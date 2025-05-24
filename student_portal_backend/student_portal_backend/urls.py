@@ -7,6 +7,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/contact/', include('contact.urls')),
     path('api/', include('core.urls')),  # Add core URLs for authentication
+    path('api/quiz/', include('quiz.urls')),  # Add quiz URLs
+    path('api/community/', include('community.urls')),  # Add community URLs
 ]
 
 # Serve media files in development

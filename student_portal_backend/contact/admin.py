@@ -4,25 +4,27 @@ from .models import Contact, Meeting, JobApplication
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'subject', 'department', 'priority', 'created_at','message')
+    list_display = ('name', 'email', 'subject', 'department', 'priority', 'created_at')
     list_filter = ('department', 'priority', 'created_at')
     search_fields = ('name', 'email', 'subject', 'message')
-    date_hierarchy = 'created_at'
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)
 
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'date', 'time', 'duration', 'department', 'status')
+    list_display = ('name', 'email', 'date', 'time', 'department', 'status')
     list_filter = ('department', 'status', 'date')
     search_fields = ('name', 'email', 'purpose')
-    date_hierarchy = 'date'
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-date', '-time')
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone', 'preferred_position', 'status', 'created_at', 'resume_link')
-    list_filter = ('status', 'preferred_position', 'created_at')
-    search_fields = ('name', 'email', 'phone', 'preferred_position')
-    date_hierarchy = 'created_at'
-    readonly_fields = ('filename', 'resume_preview')
+    list_display = ('name', 'email', 'preferred_position', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('name', 'email', 'preferred_position')
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)
     
     def filename(self, obj):
         return obj.filename()

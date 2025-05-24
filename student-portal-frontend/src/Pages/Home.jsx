@@ -10,7 +10,9 @@ import Home3 from '../MainHome/Home3';
 import Home4 from '../MainHome/Home4';
 import Home5 from '../MainHome/Home5';
 import Footer from './Footer';
-
+import Home1 from '../MainHome/Home1';
+import Game from '../MainHome/Game';
+import Community from '../Pages/Community';
 
 
 const Home = () => {
@@ -74,29 +76,14 @@ const Home = () => {
       </nav>
 
       {/* Premium Hero Section */}
-      <div className="hero-section-1" ref={showcaseRef}>
-        <div className="hero-overlay"></div>
-        <div className="hero-content animate__animated animate__fadeIn">
-          <h1 className="animate__animated animate__fadeInUp">Welcome to Your Learning Journey</h1>
-          <p className="animate__animated animate__fadeInUp animate__delay-1s">
-            Discover, Learn, and Excel with our comprehensive educational platform
-          </p>
-          <div className="hero-buttons">
-            <NavLink to="/courses" className="hero-btn primary animate__animated animate__fadeInUp animate__delay-1s">
-              Explore Courses
-            </NavLink>
-            <NavLink to="/about" className="hero-btn secondary animate__animated animate__fadeInUp animate__delay-1s">
-              Learn More
-            </NavLink>
-          </div>
-        </div>
-      </div>
- 
+      
+ <Home1></Home1>
 <Techno> </Techno>
 <Home3></Home3>
  <Home4></Home4>
 <Home5></Home5>
-      
+<Community></Community>
+ <Game></Game>    
  <Footer></Footer>
      
     </div>

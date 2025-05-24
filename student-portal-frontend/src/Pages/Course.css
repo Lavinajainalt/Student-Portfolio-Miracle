@@ -1,0 +1,93 @@
+/* Course.css */
+
+/* Wrapper styles */
+.course-container {
+  padding: 3rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #e0f2ff, #f8fbff);
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+/* Course title */
+.course-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #0f4c81;
+  margin-bottom: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: 1px 1px 2px #ffffff;
+}
+
+/* Grid layout for videos */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Each video card */
+.video-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(96, 165, 250, 0.2);
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.25);
+}
+
+/* Video iframe */
+.video-iframe {
+  width: 100%;
+  height: 200px;
+  border: none;
+  background-color: #f0f9ff;
+}
+
+/* Title under video */
+.video-title {
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1e3a8a;
+  background-color: #f9fbff;
+  border-top: 1px solid #e2e8f0;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Fallback text */
+.course-container > p {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #475569;
+  background: #ffffffaa;
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-style: italic;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .video-iframe {
+    height: 180px;
+  }
+
+  .course-title {
+    font-size: 2rem;
+  }
+
+  .video-title {
+    font-size: 1rem;
+  }
+}

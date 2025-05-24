@@ -47,6 +47,29 @@ export default function Contact2() {
       return;
     }
 
+    // Validate file type
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(selectedFile.type)) {
+      setUploadStatus({
+        uploading: false,
+        success: false,
+        error: true,
+        message: 'Please upload a PDF or Word document (doc/docx)'
+      });
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      setUploadStatus({
+        uploading: false,
+        success: false,
+        error: true,
+        message: 'File size must be less than 5MB'
+      });
+      return;
+    }
+
     setUploadStatus({
       uploading: true,
       success: false,
@@ -60,13 +83,48 @@ export default function Contact2() {
     uploadData.append('name', formData.name);
     uploadData.append('email', formData.email);
     uploadData.append('phone', formData.phone);
-    uploadData.append('preferred_position', formData.preferredPosition); // Changed to match Django model field name
+    uploadData.append('preferred_position', formData.preferredPosition);
 
     try {
-      // Send to backend API
-      const response = await axios.post('http://localhost:8000/api/contact/careers/upload-resume/', uploadData, {
+      console.log('Attempting to upload resume with data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        preferred_position: formData.preferredPosition,
+        file_name: selectedFile.name,
+        file_type: selectedFile.type,
+        file_size: selectedFile.size
+      });
+
+      // Create axios instance with default config
+      const axiosInstance = axios.create({
+        baseURL: 'http://localhost:8000',
+        timeout: 30000, // 30 second timeout
+        maxContentLength: 5 * 1024 * 1024, // 5MB max size
+        maxBodyLength: 5 * 1024 * 1024,
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Accept': 'application/json',
+        }
+      });
+
+      // First make an OPTIONS request to check CORS
+      try {
+        await axiosInstance.options('/api/contact/careers/upload-resume/');
+      } catch (corsError) {
+        console.error("CORS preflight failed:", corsError);
+      }
+
+      // Send to backend API
+      const response = await axiosInstance.post('/api/contact/careers/upload-resume/', uploadData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadStatus(prev => ({
+            ...prev,
+            message: `Uploading: ${percentCompleted}%`
+          }));
         }
       });
 
@@ -77,7 +135,7 @@ export default function Contact2() {
         uploading: false,
         success: true,
         error: false,
-        message: 'Resume uploaded successfully! We will contact you soon.'
+        message: response.data.message || 'Resume uploaded successfully! We will contact you soon.'
       });
 
       // Reset form
@@ -101,15 +159,49 @@ export default function Contact2() {
       }, 5000);
 
     } catch (error) {
-      // Handle error with detailed logging
-      console.error("Upload error:", error);
-      console.error("Response data:", error.response?.data);
+      console.error("Upload error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers,
+        config: error.config
+      });
+      
+      let errorMessage = 'Failed to upload resume. ';
+      
+      if (error.code === 'ECONNABORTED') {
+        errorMessage += 'Request timed out. Please try again.';
+      } else if (!error.response) {
+        errorMessage += 'Cannot connect to server. Please check if the server is running at http://localhost:8000';
+      } else if (error.response?.status === 413) {
+        errorMessage += 'File size too large.';
+      } else if (error.response?.status === 415) {
+        errorMessage += 'Invalid file type.';
+      } else if (error.response?.status === 400) {
+        const errors = error.response.data.errors;
+        if (errors) {
+          // Format validation errors
+          errorMessage += Object.entries(errors)
+            .map(([field, error]) => `${field}: ${error}`)
+            .join(', ');
+        } else {
+          errorMessage += error.response.data.message || 'Please check your form data and try again.';
+        }
+      } else if (error.response?.status === 500) {
+        errorMessage += 'Server error. Please try again later.';
+      } else if (error.response?.status === 404) {
+        errorMessage += 'Upload endpoint not found. Please check the server configuration.';
+      } else if (error.response?.status === 401 || error.response?.status === 403) {
+        errorMessage += 'Permission error. Please try again.';
+      } else {
+        errorMessage += error.response?.data?.message || 'Please try again later.';
+      }
       
       setUploadStatus({
         uploading: false,
         success: false,
         error: true,
-        message: error.response?.data?.message || 'Failed to upload resume. Please try again.'
+        message: errorMessage
       });
     }
   };

@@ -10,6 +10,7 @@ import { SiJavascript, SiTensorflow, SiPytorch, SiMongodb } from 'react-icons/si
 import Logo from '../Images/logo.png';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AboutImage from '../Images/about.webp';
 
 const About = () => {
   const [floatingIcons, setFloatingIcons] = useState([]);
@@ -158,113 +159,36 @@ const About = () => {
       </nav>
 
       {/* Main Content */}
-      <motion.div 
-        className="about-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        {/* Particle background */}
-        <div className="particle-overlay">
-          {Array.from({ length: 30 }).map((_, index) => (
-            <motion.div
-              key={`particle-${index}`}
-              className="particle"
-              style={{ 
-                left: `${Math.random() * 100}%`, 
-                top: `${Math.random() * 100}%`,
-                width: `${Math.random() * 5 + 2}px`,
-                height: `${Math.random() * 5 + 2}px`,
-                background: `rgba(108, 99, 255, ${Math.random() * 0.5 + 0.1})`
-              }}
-              animate={{
-                y: [0, -1000],
-                opacity: [0, 1, 0]
-              }}
-              transition={{
-                duration: Math.random() * 20 + 10,
-                delay: Math.random() * 10,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          ))}
-        </div>
+      <div>
+   <div className="about-hero1">
+  <div className="about-content1">
+    <h1 className="about-title1">About <span className="highlight1">Us</span></h1>
+    <p className="about-text1">
+      Student Fortal is your trusted digital companion throughout your academic journey...
+    </p>
+  </div>
 
-        {/* Floating background icons */}
-        <div className="floating-icons">
-          {floatingIcons.map((item) => (
-            <motion.div
-              key={item.id}
-              className="floating-icon"
-              style={{ color: item.color, fontSize: `${item.size}rem` }}
-              initial={{ x: `${item.x}vw`, y: `${item.y}vh` }}
-              animate={{
-                x: [`${item.x}vw`, `${(item.x + 10) % 100}vw`, `${item.x}vw`],
-                y: [`${item.y}vh`, `${(item.y + 15) % 100}vh`, `${item.y}vh`],
-                rotate: [0, 360]
-              }}
-              transition={{
-                duration: item.duration,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            >
-              {item.icon}
-            </motion.div>
-          ))}
-        </div>
+  <div className="about-image-container">
+    <img src={AboutImage} alt="About" className="about-image" />
+    
+    {/* SVG animated wave lines */}
+<svg
+  className="wave-lines-vertical"
+  viewBox="0 0 100 300"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g stroke="#60a5fa" strokeWidth="1" fill="none">
+    <path d="M20,0 C40,80 0,220 20,300" />
+    <path d="M40,0 C60,80 20,220 40,300" />
+    <path d="M60,0 C80,80 40,220 60,300" />
+    <path d="M80,0 C100,80 60,220 80,300" />
+  </g>
+</svg>
 
-        {/* Hero Section */}
-        <motion.div 
-          className="hero-section"
-          initial={{ y: -50 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6 }}
-          data-aos="glow"
-          data-aos-delay="300"
-        >
-          <motion.h1
-            className="typewriter neon-glow"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-          >
-            About Us
-          </motion.h1>
 
-          <motion.div 
-            className="logo-animation"
-            whileHover={{ scale: 1.05 }}
-          >
-            <motion.div 
-              className="logo-container"
-              animate={{ 
-                y: [0, -10, 0]
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <img src={Logo} alt="Company Logo" className="logo-image" />
-            </motion.div>
-            <motion.div 
-              className="tagline"
-              animate={{ 
-                opacity: [0.8, 1, 0.8]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              Our Story
-            </motion.div>
-          </motion.div>
-        </motion.div>
+  </div>
+</div>
+</div>
 
         {/* Mission Statement */}
         <div
@@ -364,6 +288,7 @@ const About = () => {
         </div>
 
         {/* Company Values */}
+        <div>
         <div
           className="values-section glass-card"
           data-aos="fade-up"
@@ -417,7 +342,7 @@ const About = () => {
             ))}
           </div>
         </div>
-
+</div>
         {/* Team Members Section */}
         <div
           className="team-section glass-card"
@@ -587,11 +512,11 @@ const About = () => {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-          >
-            Get Started Today
+          > <NavLink to='/communitycenter' style={{ textDecoration: 'none', color: 'inherit' }}>
+            Get Started Today</NavLink>
           </motion.button>
         </div>
-      </motion.div>
+
     </div>
   );
 };

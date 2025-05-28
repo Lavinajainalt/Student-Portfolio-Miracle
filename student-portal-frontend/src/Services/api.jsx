@@ -68,6 +68,27 @@ axiosInstance.interceptors.response.use(
 );
 
 const apiService = {
+  // Fee Management endpoints
+  getStudentFees: async () => {
+    try {
+      const response = await axiosInstance.get('fees/student-fees/');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch student fees:', error);
+      throw error.response?.data || { message: 'Failed to fetch fee details' };
+    }
+  },
+  
+  initiatePayment: async (paymentData) => {
+    try {
+      const response = await axiosInstance.post('fees/initiate-payment/', paymentData);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to initiate payment:', error);
+      throw error.response?.data || { message: 'Failed to initiate payment' };
+    }
+  },
+  
   // Auth endpoints
   login: async (username, password, role) => {
     try {

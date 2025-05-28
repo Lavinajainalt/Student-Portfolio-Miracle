@@ -15,6 +15,14 @@ import AboutImage from '../Images/about.webp';
 const About = () => {
   const [floatingIcons, setFloatingIcons] = useState([]);
   const { user, logout } = useAuth();
+  const [clickedLinks, setClickedLinks] = useState({});
+
+  const handleLinkClick = (path) => {
+    setClickedLinks(prev => ({
+      ...prev,
+      [path]: !prev[path]
+    }));
+  };
 
   useEffect(() => {
     // Initialize AOS animation library with enhanced settings
@@ -138,17 +146,60 @@ const About = () => {
         </div>
         
         <div className="navbar-links">
-          <NavLink to="/home" end className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <i className="fas fa-home"></i> Home
+          <NavLink 
+            to="/home" 
+            end 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/home'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/home')}
+          >
+            <i className="fas fa-home"></i> <span>Home</span>
           </NavLink>
-          <NavLink to="/courses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <i className="fas fa-book"></i> Courses
+          <NavLink 
+            to="/dashboard" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/dashboard'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/dashboard')}
+          >
+            <i className="fas fa-tachometer-alt"></i> <span>Dashboard</span>
           </NavLink>
-          <NavLink to="/about" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <i className="fas fa-info-circle"></i> About
+          <NavLink 
+            to="/courses" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/courses'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/courses')}
+          >
+            <i className="fas fa-book"></i> <span>Courses</span>
           </NavLink>
-          <NavLink to="/maincontact" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <i className="fas fa-envelope"></i> Contact
+          <NavLink 
+            to="/about" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/about'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/about')}
+          >
+            <i className="fas fa-info-circle"></i> <span>About</span>
+          </NavLink>
+          <NavLink 
+            to="/maincontact" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/maincontact'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/maincontact')}
+          >
+            <i className="fas fa-envelope"></i> <span>Contact</span>
+          </NavLink>
+          <NavLink 
+            to="/communitycenter" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/communitycenter'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/communitycenter')}
+          >
+            <i className="fas fa-users"></i> <span>Community</span>
           </NavLink>
         </div>
         

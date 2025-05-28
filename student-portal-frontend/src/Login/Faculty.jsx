@@ -36,7 +36,7 @@ function Faculty() {
         
         console.log('Logging in faculty with user data:', userData);
         login(userData); // Store in context
-        navigate('/home');
+        navigate('/homefaculty');
       } else {
         setError(response?.message || 'Login failed. Please try again.');
         console.error('Faculty login failed:', response);

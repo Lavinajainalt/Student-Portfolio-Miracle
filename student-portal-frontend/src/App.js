@@ -12,8 +12,10 @@ import About from './Pages/About';
 import Quiz from './MainHome/Quiz';
 import Community from './Pages/Community';
 import CommunityPage from './Pages/CommunityCenter';
-
+import FeeManagement from './components/StudentDashboard/FeeManagement';
 import Courses from './Pages/Course';
+import Test from './Pages/Test'; // Adjust the import path as necessary
+
 
 function App() {
   return (
@@ -24,8 +26,26 @@ function App() {
         <Route path="/faculty-login" element={<Faculty />} />
         <Route path="/student-login" element={<Student />} />
         <Route path="/quiz" element={<Quiz />} />
+
+        <Route path="/test" element={<Test />} />
         
         {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <StudentDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/fees" 
+          element={
+            <ProtectedRoute>
+              <FeeManagement />
+            </ProtectedRoute>
+          } 
+        />
         <Route 
           path="/communitycenter" 
           element={

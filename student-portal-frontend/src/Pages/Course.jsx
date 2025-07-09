@@ -4,11 +4,60 @@ import { NavLink } from 'react-router-dom';
 import '../Dashboard/StudentNavbar.css';
 import { useAuth } from '../context/AuthContext';
 import apiService from '../Services/api';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Course = () => {
   const [videos, setVideos] = useState([]);
   const { user, logout } = useAuth();
   const [clickedLinks, setClickedLinks] = useState({});
+  const [selectedArea, setSelectedArea] = useState('Frontend');
+  const interviewQuestions = {
+    Frontend: [
+      {
+        q: 'How to introduce yourself in a frontend interview?',
+        a: 'Start with your name and background, mention your experience with frontend technologies (like React, HTML, CSS, JavaScript), highlight key projects, and express your passion for UI/UX and web development.'
+      },
+      {
+        q: 'What is React and how does it work?',
+        a: 'React is a JavaScript library for building user interfaces. It works by creating a virtual DOM and efficiently updating the real DOM when state changes.'
+      },
+      {
+        q: 'Explain the virtual DOM.',
+        a: 'The virtual DOM is a lightweight copy of the real DOM. React uses it to optimize updates by only changing parts of the DOM that have actually changed.'
+      }
+      // ... (other frontend questions)
+    ],
+    Backend: [
+      {
+        q: 'How to introduce yourself in a backend interview?',
+        a: 'Begin with your name and background, mention your experience with backend technologies (like Node.js, Python, databases), highlight backend projects, and emphasize your problem-solving and system design skills.'
+      },
+      {
+        q: 'What is REST API?',
+        a: 'A REST API is an application programming interface that follows REST principles, using HTTP methods to access and manipulate resources.'
+      },
+      {
+        q: 'Explain the MVC architecture.',
+        a: 'MVC stands for Model-View-Controller. It separates application logic into three interconnected components for better organization.'
+      }
+      // ... (other backend questions)
+    ],
+    'Full Stack': [
+      {
+        q: 'How to introduce yourself in a full stack interview?',
+        a: 'Introduce yourself, mention your experience with both frontend and backend technologies, highlight full stack projects, and show your ability to work across the stack and collaborate with teams.'
+      },
+      {
+        q: 'What is the difference between frontend and backend?',
+        a: 'Frontend is the user interface and experience, while backend is the server-side logic and database management.'
+      },
+      {
+        q: 'How do you manage state across client and server?',
+        a: 'Use APIs to sync state, local storage or cookies for persistence, and state management libraries.'
+      }
+      // ... (other full stack questions)
+    ]
+  };
 
   const handleLinkClick = (path) => {
     setClickedLinks(prev => ({
@@ -99,6 +148,7 @@ const Course = () => {
             </div>
             
             <div className="navbar-user">
+              <ThemeToggle />
               <span>{user?.username || 'Student'}</span>
               <button className="logout-btn" onClick={logout}>Logout</button>
             </div>
@@ -132,6 +182,33 @@ const Course = () => {
             );
           })}
         </div>
+      )}
+    </div>
+
+    {/* Interview Questions Section */}
+    <div className="interview-section">
+      <h2>Interview Questions (Q&A Format)</h2>
+      <div className="interview-area-btns">
+        {['Frontend', 'Backend', 'Full Stack'].map(area => (
+          <button
+            key={area}
+            onClick={() => setSelectedArea(area)}
+            className={selectedArea === area ? 'selected' : ''}
+          >
+            {area}
+          </button>
+        ))}
+      </div>
+      {selectedArea && (
+        <ul>
+          {(interviewQuestions[selectedArea] || []).map((qa, idx) => (
+            <li key={idx} style={{ marginBottom: '1.2rem' }}>
+              <strong>Q{idx + 1}:</strong> {qa.q}
+              <br />
+              <span style={{ color: '#2563eb', fontWeight: 500 }}><strong>A:</strong> {qa.a}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
     </>

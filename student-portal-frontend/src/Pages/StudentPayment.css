@@ -1,0 +1,212 @@
+.student-payment-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.student-payment-container h2 {
+  margin-bottom: 2rem;
+  color: var(--text-dark);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.payment-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow);
+}
+
+.summary-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+.amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.amount.due {
+  color: var(--danger-color);
+}
+
+.payment-progress {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.payment-percentage {
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  margin-top: 0.5rem;
+  text-align: right;
+}
+
+.next-payment-section {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.next-payment-section h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.next-payment-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.payment-info p {
+  margin: 0.5rem 0;
+}
+
+.pay-now-button {
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: var(--btn-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 150px;
+}
+
+.pay-now-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+}
+
+.pay-now-button:active {
+  transform: translateY(-1px);
+}
+
+.pay-now-button.processing {
+  background: linear-gradient(45deg, #a0a0a0, #c0c0c0);
+  cursor: not-allowed;
+}
+
+.payment-success-message {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success-color);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.all-paid-message {
+  background: var(--bg-light);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--success-color);
+}
+
+.payment-history {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.payment-history h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+}
+
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payment-table th,
+.payment-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.payment-table th {
+  background-color: rgba(67, 97, 238, 0.1);
+  font-weight: 600;
+}
+
+.payment-table tr.paid {
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.payment-table tr.pending {
+  background-color: rgba(245, 158, 11, 0.05);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-badge.paid {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--success-color);
+}
+
+.status-badge.pending {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: var(--warning-color);
+}
+
+@media (max-width: 768px) {
+  .next-payment-details {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .pay-now-button {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}

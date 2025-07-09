@@ -13,7 +13,8 @@ import Footer from './Footer';
 import Home1 from '../MainHome/Home1';
 import Game from '../MainHome/Game';
 import Community from '../Pages/Community';
-import logoimage from '../Images/logo.png'
+import logoimage from '../Images/logo.png';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Home = () => {
   const { user, logout } = useAuth();
@@ -122,6 +123,7 @@ const Home = () => {
         </div>
         
         <div className="navbar-user">
+          <ThemeToggle />
           <span className="animate__animated animate__fadeIn">{user?.username || 'Student'}</span>
           <button className="logout-btn animate__animated animate__fadeIn" onClick={logout}>Logout</button>
         </div>

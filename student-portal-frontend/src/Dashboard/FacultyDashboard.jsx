@@ -3,10 +3,12 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { NavLink, Routes, Route } from 'react-router-dom';
 import './StudentNavbar.css';
+import ThemeToggle from '../components/ThemeToggle';
 import Home from '../Pages/Home';
 import About from '../Pages/About';
 import Contact from '../Cont/Contact';
 import Courses from '../Pages/Course';
+
 
 function StudentDashboard() {
   const { user, logout } = useAuth();
@@ -42,6 +44,7 @@ function StudentDashboard() {
             </NavLink>
           </div>
           <div className="navbar-user">
+            <ThemeToggle />
             <span>{user?.name || 'Student'}</span>
             <button onClick={logout} className="logout-btn">Logout</button>
           </div>

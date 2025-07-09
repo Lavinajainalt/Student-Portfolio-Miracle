@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaCloudUploadAlt, FaCode } from 'react-icons/fa';
 import './Home1.css';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
@@ -31,7 +32,9 @@ const HeroSection = () => {
         </p>
         <div className="button-group">
           <button className="btn black">Explore Courses</button>
-          <button className="btn outline">Learn More</button>
+          <Link to="/course-details">
+            <button className="btn outline">Learn More</button>
+          </Link>
         </div>
       </div>
 

@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Quiz.css";
-
+import { useAuth } from "../context/AuthContext";
+import QuizService from "../Services/quizService";
 
 const TIMER_PER_QUESTION = 15;
+const POINTS_PER_CORRECT = 100;
 
 const questionsData = [
    {
@@ -526,6 +528,7 @@ const questionsData = [
 ];
 
 export default function Quiz() {
+  const { user } = useAuth();
   const [playerName, setPlayerName] = useState("");
   const [subject, setSubject] = useState("");
   const [questions, setQuestions] = useState([]);
@@ -535,7 +538,53 @@ export default function Quiz() {
   const [showReview, setShowReview] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [trophy, setTrophy] = useState("");
   const timerRef = useRef(null);
+
+  // Load saved points when component mounts
+  useEffect(() => {
+    const loadPoints = async () => {
+      try {
+        // Load points from the server
+        const points = await QuizService.getPoints(user);
+        setTotalPoints(points);
+      } catch (error) {
+        console.error("Error loading points:", error);
+        // Fallback to localStorage
+        const savedPoints = localStorage.getItem("quizPoints");
+        if (savedPoints) {
+          setTotalPoints(parseInt(savedPoints));
+        }
+      }
+    };
+    
+    loadPoints();
+    
+    // Set player name from user if available
+    if (user && (user.name || user.username)) {
+      setPlayerName(user.name || user.username);
+    }
+  }, [user]);
+
+  // Update trophy based on points and save points
+  useEffect(() => {
+    if (totalPoints >= 10000) {
+      setTrophy("gold");
+    } else if (totalPoints >= 5000) {
+      setTrophy("silver");
+    } else if (totalPoints >= 1000) {
+      setTrophy("bronze");
+    } else {
+      setTrophy("");
+    }
+    
+    // Save points to server whenever they change
+    // Only save if points have been initialized (not the first render)
+    if (totalPoints > 0) {
+      QuizService.savePoints(totalPoints, user);
+    }
+  }, [totalPoints, user]);
 
   useEffect(() => {
     if (!subject || showResult || showReview) return;
@@ -571,7 +620,7 @@ export default function Quiz() {
     newAnswers[currentIndex] = option;
     setAnswers(newAnswers);
     clearTimeout(timerRef.current);
-    setTimeout(() => handleNext(), 300);
+    // Remove the automatic next question timeout to prevent unwanted box
   };
 
   const handleNext = () => {
@@ -592,6 +641,15 @@ export default function Quiz() {
       0
     );
     setScore(correct);
+    
+    // Add points for correct answers (100 points per correct answer)
+    const earnedPoints = correct * POINTS_PER_CORRECT;
+    const newTotalPoints = totalPoints + earnedPoints;
+    setTotalPoints(newTotalPoints);
+    
+    // Save points immediately to ensure they're not lost
+    QuizService.savePoints(newTotalPoints, user);
+    
     setShowResult(true);
     setShowReview(false);
   };
@@ -608,6 +666,15 @@ export default function Quiz() {
 
   return (
     <div className="quizmain-container">
+      <div className="points-display">
+        {user && <span className="user-name">{user.name || user.username || "User"}</span>}
+        <span>Points: {totalPoints}</span>
+        {trophy && (
+          <div className={`trophy ${trophy}`}>
+            {trophy === "gold" ? "🏆" : trophy === "silver" ? "🥈" : "🥉"}
+          </div>
+        )}
+      </div>
     <div className="quiz-container">
       <h1>🧠 Programming Quiz</h1>
 
@@ -629,6 +696,14 @@ export default function Quiz() {
       ) : showResult ? (
         <div className="result-screen">
           <h2>Your Score: {score} / {questions.length}</h2>
+          <p>Points earned: {score * POINTS_PER_CORRECT}</p>
+          <p>Total points: {totalPoints}</p>
+          {trophy && (
+            <div className={`trophy-large ${trophy}`}>
+              {trophy === "gold" ? "🏆" : trophy === "silver" ? "🥈" : "🥉"}
+              <p>You've earned a {trophy} trophy!</p>
+            </div>
+          )}
           <button className="btn" onClick={resetQuiz}>Play Again</button>
         </div>
       ) : showReview ? (
@@ -668,7 +743,7 @@ export default function Quiz() {
               </button>
             ))}
           </div>
-          <div className="progress-bar">
+          <div className="progress-bar1">
             <div
               className="progress-fill"
               style={{ width: `${(timeLeft / TIMER_PER_QUESTION) * 100}%` }}

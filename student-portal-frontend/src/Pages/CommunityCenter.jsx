@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 import { FaUsers, FaComments, FaInfoCircle, FaClipboardList, FaUserFriends, FaPaperPlane } from 'react-icons/fa';
+import '../Dashboard/StudentNavbar.css';
 import './CommunityCenter.css';
+import 'animate.css';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function CommunityCenter() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [clickedLinks, setClickedLinks] = useState({});
   const messagesEndRef = useRef(null);
   
   // Get user and token from localStorage
@@ -25,6 +30,18 @@ export default function CommunityCenter() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  
+  const handleLinkClick = (path) => {
+    setClickedLinks(prev => ({
+      ...prev,
+      [path]: !prev[path]
+    }));
+  };
+  
+  const logout = () => {
+    localStorage.removeItem('user');
+    window.location.href = '/login';
   };
 
   useEffect(() => {
@@ -85,17 +102,90 @@ export default function CommunityCenter() {
   };
 
   return (
-    <div className="community-container">
-      <div className="content-wrapper">
-        <div className="header">
-          <div className="header-content">
-            <FaUsers className="text-4xl" />
-            <h1 className="header-title">Community Center</h1>
-          </div>
-          <p className="header-subtitle">
-            Connect with students and faculty through real-time chat
-          </p>
+    <div className="dashboard-container">
+      {/* Navbar */}
+      <nav className="navbar animate__animated animate__fadeInDown">
+        <div className="navbar-brand">
+          <img src={require('../Images/logo.png')} alt="Logo" className="navbar-logo" />
+          <h2 className="animate__animated animate__pulse animate__infinite animate__slower">Student Portal</h2>
         </div>
+        
+        <div className="navbar-links">
+          <NavLink 
+            to="/home" 
+            end 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/home'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/home')}
+          >
+            <i className="fas fa-home"></i> <span>Home</span>
+          </NavLink>
+          <NavLink 
+            to="/dashboard" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/dashboard'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/dashboard')}
+          >
+            <i className="fas fa-tachometer-alt"></i> <span>Dashboard</span>
+          </NavLink>
+          <NavLink 
+            to="/courses" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/courses'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/courses')}
+          >
+            <i className="fas fa-book"></i> <span>Courses</span>
+          </NavLink>
+          <NavLink 
+            to="/about" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/about'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/about')}
+          >
+            <i className="fas fa-info-circle"></i> <span>About</span>
+          </NavLink>
+          <NavLink 
+            to="/maincontact" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/maincontact'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/maincontact')}
+          >
+            <i className="fas fa-envelope"></i> <span>Contact</span>
+          </NavLink>
+          <NavLink 
+            to="/communitycenter" 
+            className={({ isActive }) => 
+              `nav-link ${isActive ? 'active' : ''} ${clickedLinks['/communitycenter'] ? 'clicked' : ''}`
+            }
+            onClick={() => handleLinkClick('/communitycenter')}
+          >
+            <i className="fas fa-users"></i> <span>Community</span>
+          </NavLink>
+        </div>
+        
+        <div className="navbar-user">
+          <ThemeToggle />
+          <span className="animate__animated animate__fadeIn">{currentUser?.username || 'Student'}</span>
+          <button className="logout-btn animate__animated animate__fadeIn" onClick={logout}>Logout</button>
+        </div>
+      </nav>
+
+      <div className="community-contentair">
+        <div className="content-wrapper">
+          <div className="header">
+            <div className="header-content">
+              <FaUsers className="text-4xl" />
+              <h1 className="header-title">Community Center</h1>
+            </div>
+            <p className="header-subtitle">
+              Connect with students and faculty through real-time chat
+            </p>
+          </div>
 
         <div className="main-content">
           <div className="chat-section">
@@ -195,6 +285,7 @@ export default function CommunityCenter() {
               </ul>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

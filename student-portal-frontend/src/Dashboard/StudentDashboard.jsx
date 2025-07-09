@@ -1,9 +1,13 @@
 // src/Dashboard/StudentDashboard.jsx
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { NavLink } from 'react-router-dom';
 import './StudentNavbar.css';
+import ThemeToggle from '../components/ThemeToggle';
+import apiService from '../Services/api';
+import FeeManagement from '../components/StudentDashboard/FeeManagement';
+
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import {
@@ -21,6 +25,11 @@ import {
   Line,
   AreaChart,
   Area,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
 } from 'recharts';
 
 // Student details based on user data
@@ -185,6 +194,9 @@ const studentDetails = {
 function StudentDashboard() {
   const { user, logout } = useAuth();
   const [clickedLinks, setClickedLinks] = useState({});
+  const [facultyFeedback, setFacultyFeedback] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   
   const handleLinkClick = (path) => {
       setClickedLinks(prev => ({
@@ -194,6 +206,68 @@ function StudentDashboard() {
     };
   
   const studentInfo = studentDetails[user?.username || ''] || {};
+  
+  useEffect(() => {
+    if (user?.username) {
+      fetchFacultyFeedback();
+    }
+  }, [user]);
+  
+  const [newFeedbackCount, setNewFeedbackCount] = useState(0);
+  
+  const fetchFacultyFeedback = async () => {
+    setLoading(true);
+    try {
+      const response = await apiService.getStudentFeedback(user.username);
+      if (response.success && response.data) {
+        setFacultyFeedback(response.data);
+        
+        // Count new feedback items
+        const newFeedbackItems = response.data.filter(item => item.isNew);
+        setNewFeedbackCount(newFeedbackItems.length);
+        
+        // Update studentInfo with faculty feedback data
+        if (response.data.length > 0) {
+          const updatedProgress = { ...studentInfo.progress };
+          
+          response.data.forEach(item => {
+            if (item.title === 'Overall Progress') {
+              updatedProgress.overall = item.percentage;
+            } else if (item.title === 'Assignments') {
+              updatedProgress.assignments = item.percentage;
+            } else if (item.title === 'Quizzes') {
+              updatedProgress.quizzes = item.percentage;
+            } else if (item.title === 'Projects') {
+              updatedProgress.projects = item.percentage;
+            }
+          });
+          
+          studentInfo.progress = updatedProgress;
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching faculty feedback:', err);
+      setError('Failed to load faculty feedback');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Mark feedback as read
+  const markFeedbackAsRead = (feedbackId) => {
+    const updatedFeedback = facultyFeedback.map(item => {
+      if (item.id === feedbackId) {
+        return { ...item, isNew: false };
+      }
+      return item;
+    });
+    
+    setFacultyFeedback(updatedFeedback);
+    setNewFeedbackCount(prevCount => Math.max(0, prevCount - 1));
+    
+    // Update localStorage
+    localStorage.setItem(`feedback_${user.username}`, JSON.stringify(updatedFeedback));
+  };
   
   return (
     <div className="dashboard-container">
@@ -210,11 +284,15 @@ function StudentDashboard() {
           <NavLink to="/dashboard" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
             <i className="fas fa-tachometer-alt"></i> <span>Dashboard</span>
           </NavLink>
-          <NavLink to="/fees" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <i className="fas fa-rupee-sign"></i> <span>Fees</span>
-          </NavLink>
           <NavLink to="/courses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
             <i className="fas fa-book"></i> <span>Courses</span>
+          </NavLink>
+          <NavLink to="/feedback" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <i className="fas fa-comment"></i> 
+            <span>Feedback</span>
+            {newFeedbackCount > 0 && (
+              <span className="nav-notification-badge">{newFeedbackCount}</span>
+            )}
           </NavLink>
           <NavLink to="/about" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
             <i className="fas fa-info-circle"></i> <span>About</span>
@@ -235,6 +313,7 @@ function StudentDashboard() {
         </div>
         
         <div className="navbar-user">
+          <ThemeToggle />
           <span>{studentInfo.name || 'Student'}</span>
           <button className="logout-btn" onClick={logout}>Logout</button>
         </div>
@@ -420,6 +499,82 @@ function StudentDashboard() {
             </div>
           </div>
         </div>
+        
+        {/* Faculty Feedback Section */}
+        {facultyFeedback.length > 0 && (
+          <div className="faculty-feedback-section">
+            <h2>
+              Faculty Feedback
+              {newFeedbackCount > 0 && (
+                <span className="feedback-notification-badge">{newFeedbackCount}</span>
+              )}
+            </h2>
+            
+            {/* Radar Chart for Faculty Assessment */}
+            <div className="feedback-chart-container">
+              <div className="chart-card radar-chart">
+                <h3>Faculty Assessment</h3>
+                <RadarChart 
+                  outerRadius={90} 
+                  width={400} 
+                  height={250} 
+                  data={facultyFeedback.map(item => ({
+                    subject: item.title,
+                    A: item.percentage,
+                    fullMark: 100
+                  }))}
+                >
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="subject" />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} />
+                  <Radar 
+                    name="Performance" 
+                    dataKey="A" 
+                    stroke="#4361ee" 
+                    fill="#4361ee" 
+                    fillOpacity={0.6} 
+                  />
+                  <Tooltip />
+                </RadarChart>
+              </div>
+              
+              <div className="feedback-details">
+                {facultyFeedback.map((feedback) => (
+                  <div 
+                    key={feedback.id} 
+                    className={`feedback-card ${feedback.isNew ? 'new-feedback' : ''}`}
+                    onClick={() => feedback.isNew && markFeedbackAsRead(feedback.id)}
+                  >
+                    {feedback.isNew && (
+                      <div className="new-feedback-indicator">
+                        <span>New</span>
+                      </div>
+                    )}
+                    <div className="feedback-header">
+                      <h3>{feedback.title}</h3>
+                      <div className="feedback-score">
+                        <span>{feedback.points}</span>
+                        <small>points</small>
+                      </div>
+                    </div>
+                    <div className="feedback-progress">
+                      <div 
+                        className="progress-bar" 
+                        style={{ width: `${feedback.percentage}%` }}
+                      >
+                        <span>{feedback.percentage}%</span>
+                      </div>
+                    </div>
+                    <p className="feedback-text">{feedback.feedback}</p>
+                    <div className="feedback-date">
+                      {new Date(feedback.date_created).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Quiz Scores Section */}
         <div className="scores-section">
@@ -471,6 +626,9 @@ function StudentDashboard() {
             </div>
           </div>
         </div>
+
+        {/* Fee Management Section */}
+        <FeeManagement studentId={user?.username} />
 
         {/* Login Statistics Section */}
         <div className="login-stats-section">

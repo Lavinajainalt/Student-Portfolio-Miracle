@@ -96,6 +96,9 @@ export default function Contact2() {
         file_size: selectedFile.size
       });
 
+      // Get auth token from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
       // Create axios instance with default config
       const axiosInstance = axios.create({
         baseURL: 'http://localhost:8000',
@@ -114,11 +117,19 @@ export default function Contact2() {
         console.error("CORS preflight failed:", corsError);
       }
 
+      // Prepare headers with authentication
+      const headers = {
+        'Content-Type': 'multipart/form-data',
+      };
+      
+      // Add authorization header if token exists
+      if (user && user.token) {
+        headers['Authorization'] = `Bearer ${user.token}`;
+      }
+
       // Send to backend API
       const response = await axiosInstance.post('/api/contact/careers/upload-resume/', uploadData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers,
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setUploadStatus(prev => ({

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import apiService from '../Services/api';
 import './Login.css';
+import ThemeToggleWrapper from '../components/ThemeToggleWrapper';
 
 function Faculty() {
   const [username, setUsername] = useState('');
@@ -51,6 +52,7 @@ function Faculty() {
 
   return (
     <div className="login-container">
+      <ThemeToggleWrapper />
        {/* Background elements */}
        <div className="background">
         <div className="animated-gradient"></div>

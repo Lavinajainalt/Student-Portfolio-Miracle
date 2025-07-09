@@ -5,6 +5,7 @@ import '../Dashboard/StudentNavbar.css';
 import Contact from '../Cont/Contact';
 import Contact1 from '../Cont/Contact1';
 import Contact2 from '../Cont/Contact2';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function Maincontact() {
   const { user, logout } = useAuth();
@@ -99,6 +100,7 @@ export default function Maincontact() {
         </div>
         
         <div className="navbar-user">
+          <ThemeToggle />
           <span className="animate__animated animate__fadeIn">{user?.username || 'Student'}</span>
           <button className="logout-btn animate__animated animate__fadeIn" onClick={logout}>Logout</button>
         </div>

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './UserRoleSelect.css';
+import ThemeToggleWrapper from '../components/ThemeToggleWrapper';
 
 function UserRoleSelect() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function UserRoleSelect() {
 
   return (
     <div className={`role-select-container ${isVisible ? 'visible' : ''}`}>
+      <ThemeToggleWrapper />
       {/* Background elements */}
       <div className="background">
         <div className="animated-gradient"></div>

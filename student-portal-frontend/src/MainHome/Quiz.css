@@ -2,17 +2,71 @@
 .quizmain-container {
   display: flex;
   flex-direction: column;
-
   justify-content: center;
   min-height: 80vh;
-    
+  background-image: url('https://img.freepik.com/free-vector/geometric-science-education-background-vector-gradient-blue-digital-remix_53876-125993.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  margin: 0;  
+}
 
-     background-image: url('https://img.freepik.com/free-vector/geometric-science-education-background-vector-gradient-blue-digital-remix_53876-125993.jpg');
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100vh;
-    margin: 0;  
+/* Points Display */
+.points-display {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  font-weight: bold;
+  font-size: 18px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+  border: 2px solid #e4ebf5;
+}
+
+.user-name {
+  color: #2d7dfc;
+  border-right: 1px solid #ddd;
+  padding-right: 12px;
+}
+
+/* Trophy Styles */
+.trophy {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trophy-large {
+  font-size: 40px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.trophy-large p {
+  font-size: 16px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.bronze {
+  color: #cd7f32;
+}
+
+.silver {
+  color: #c0c0c0;
+}
+
+.gold {
+  color: #ffd700;
 }
 .quiz-container {
   max-width: 600px;
@@ -78,6 +132,8 @@ h1 {
   color: #fff;
   border-color: #2d7dfc;
   transform: scale(1.02);
+  outline: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Buttons */
@@ -103,10 +159,10 @@ h1 {
 }
 
 /* Progress Bar */
-.progress-bar {
+.progress-bar1 {
   background-color: #e0e0e0;
   border-radius: 20px;
-  height: 10px;
+  height: 6px;
   overflow: hidden;
   margin: 25px 0;
 }

@@ -72,6 +72,9 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
 }
 
 .installment-card:hover {
@@ -121,15 +124,16 @@
 }
 
 .installment-details {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .installment-details p {
   margin: 0.5rem 0;
   color: var(--text-dark);
+  flex: 1 0 200px;
 }
 
 .installment-details p:first-child {
@@ -177,6 +181,7 @@
 
   .fee-summary {
     grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
   .summary-item {
@@ -191,13 +196,38 @@
     margin-top: 2rem;
   }
 
-  .installment-details {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
   .pay-button {
     max-width: 100%;
+  }
+  
+  .installment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .fee-summary {
+    grid-template-columns: 1fr;
+  }
+  
+  .installment-card {
+    padding: 1rem;
+  }
+  
+  .payment-modal {
+    padding: 1rem;
+    width: 95%;
+  }
+  
+  .payment-form input,
+  .payment-form select {
+    padding: 0.6rem;
   }
 }
 
@@ -219,12 +249,14 @@
 .payment-modal {
   background: white;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 90%;
   max-width: 500px;
   position: relative;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   animation: modalFadeIn 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 @keyframes modalFadeIn {
@@ -263,7 +295,9 @@
   justify-content: space-between;
   margin-bottom: 2rem;
   position: relative;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .payment-steps::before {
@@ -275,17 +309,34 @@
   height: 2px;
   background: #e9ecef;
   z-index: 1;
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .payment-steps::before {
+    display: block;
+  }
 }
 
 .step {
   background: white;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #666;
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;
+  text-align: center;
+  flex: 1;
+  min-width: 70px;
+}
+
+@media (min-width: 576px) {
+  .step {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
 }
 
 .step.active {
@@ -300,7 +351,7 @@
 
 .payment-method-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -347,6 +398,12 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .card-extra-details {
+    grid-template-columns: 1fr;
+  }
 }
 
 .proceed-button,
@@ -433,4 +490,63 @@
   margin-right: 0.5rem;
 }
 
-/* ... rest of the existing code ... */
+/* Payment form styles */
+.payment-field {
+  margin-bottom: 1rem;
+}
+
+.payment-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.payment-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.payment-header h3 {
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.error-message {
+  background-color: #fde0dc;
+  color: var(--error-color);
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.fee-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: var(--text-light);
+}
+.payment-details {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.confirmation-details {
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+/* Global overflow fix */
+* {
+  max-width: 100%;
+}
+
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  max-width: 100%;
+}

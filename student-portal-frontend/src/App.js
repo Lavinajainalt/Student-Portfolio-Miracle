@@ -14,20 +14,40 @@ import Community from './Pages/Community';
 import CommunityPage from './Pages/CommunityCenter';
 import FeeManagement from './components/StudentDashboard/FeeManagement';
 import Courses from './Pages/Course';
-import Test from './Pages/Test'; // Adjust the import path as necessary
-
+import CourseDetails from './Pages/CourseDetails';
+import Test from './Pages/Test';
+import Homefaculty from './Pages/Homefaculty'
+import Aboutfaculty from './Pages/AboutFaculty'
+import Contactfaculty from './Pages/ContactFaculty'
+import Report from './Pages/Report'
+import Feedback from './Pages/Feedback';
+import CommunityFaculty from './Pages/CommunityFaculty';
+import StudentResults from './Pages/StudentResults';
+import { ThemeProvider } from './context/ThemeContext';
+import './theme.css';
+import Layout from './components/Layout';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/select-role" element={<UserRoleSelect />} />
-        <Route path="/faculty-login" element={<Faculty />} />
-        <Route path="/student-login" element={<Student />} />
-        <Route path="/quiz" element={<Quiz />} />
+    <ThemeProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<WelcomePage />} />
+            <Route path="/select-role" element={<UserRoleSelect />} />
+            <Route path="/faculty-login" element={<Faculty />} />
+            <Route path="/student-login" element={<Student />} />
+            <Route path="/quiz" element={<Quiz />} />
 
-        <Route path="/test" element={<Test />} />
+            <Route path="/test" element={<Test />} />
+            <Route 
+              path="/results" 
+              element={
+                <ProtectedRoute requiredRole="student">
+                  <StudentResults />
+                </ProtectedRoute>
+              } 
+            />
         
         {/* Protected Routes */}
         <Route 
@@ -62,6 +82,14 @@ function App() {
             </ProtectedRoute>
           } 
         />
+
+        <Route path="/homefaculty"
+        element={
+          <ProtectedRoute>
+            <Homefaculty />
+          </ProtectedRoute>
+        } />
+        
         <Route 
           path="/about" 
           element={
@@ -69,6 +97,20 @@ function App() {
               <About />
             </ProtectedRoute>
           } 
+        />
+        <Route path="/aboutfaculty"
+        element={
+          <ProtectedRoute>
+            <Aboutfaculty/>
+            </ProtectedRoute>
+        }
+        />
+        <Route path="/contactfaculty"
+        element={
+          <ProtectedRoute>
+            <Contactfaculty/>
+          </ProtectedRoute>
+        }
         />
         <Route 
           path="/maincontact" 
@@ -83,6 +125,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Courses />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/course-details" 
+          element={
+            <ProtectedRoute>
+              <CourseDetails />
             </ProtectedRoute>
           } 
         />
@@ -103,8 +153,31 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="report"
+        element={
+          <ProtectedRoute>
+            <Report/>
+          </ProtectedRoute>
+        }
+        />
+        <Route path="feedback"
+        element={
+          <ProtectedRoute>
+            <Feedback/>
+          </ProtectedRoute>
+        }
+        />
+          <Route path="communityfaculty"
+        element={
+          <ProtectedRoute>
+            <CommunityFaculty/>
+          </ProtectedRoute>
+        }
+        />
       </Routes>
+        </Layout>
     </Router>
+    </ThemeProvider>
   );
 }
 

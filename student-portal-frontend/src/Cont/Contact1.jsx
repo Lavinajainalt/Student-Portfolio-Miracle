@@ -28,7 +28,7 @@ export default function Contact1() {
           <div className="contact-info">
             <div className="contact-method">
               <span className="contact-icon">📞</span>
-              <p>+1 (555) 123-4567</p>
+              <p>0 9179001399</p>
             </div>
             <div className="contact-method">
               <span className="contact-icon">📧</span>
@@ -36,7 +36,7 @@ export default function Contact1() {
             </div>
             <div className="contact-method">
               <span className="contact-icon">📍</span>
-              <p>123 Education Ave, Learning City</p>
+              <p>Zone 2 ,Miracle IT Career Academy,Akriti Complex,Maharan Pratap Nagar Bhopal,Madhya Pradesh</p>
             </div>
           </div>
         </div>

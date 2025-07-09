@@ -11,6 +11,7 @@ import Logo from '../Images/logo.png';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AboutImage from '../Images/about.webp';
+import ThemeToggle from '../components/ThemeToggle';
 
 const About = () => {
   const [floatingIcons, setFloatingIcons] = useState([]);
@@ -204,6 +205,7 @@ const About = () => {
         </div>
         
         <div className="navbar-user">
+          <ThemeToggle />
           <span>{user?.username || 'Student'}</span>
           <button className="logout-btn" onClick={logout}>Logout</button>
         </div>

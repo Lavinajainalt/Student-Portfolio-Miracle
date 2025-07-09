@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import { useNavigate } from 'react-router-dom';
 import './welcomePage.css';
+import ThemeToggleWrapper from '../components/ThemeToggleWrapper';
 
 function WelcomePage() {
   const [loading, setLoading] = useState(true);
@@ -69,6 +70,7 @@ function WelcomePage() {
 
   return (
     <div className={`welcome-page ${showWelcome ? 'show' : 'hide'}`}>
+      <ThemeToggleWrapper />
       <div className="welcome-background">
         <div className="animated-gradient"></div>
         <div className="particle-container">

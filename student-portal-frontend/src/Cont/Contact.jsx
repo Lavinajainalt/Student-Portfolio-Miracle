@@ -3,6 +3,7 @@ import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import './Contact.css';
 
+
 const Contact = () => {
   const [activeTab, setActiveTab] = useState('message'); // Track active tab
   const [callNumber, setCallNumber] = useState('1-800-555-0123'); // Default call number
@@ -132,7 +133,18 @@ const Contact = () => {
     setStatus(prevStatus => ({ ...prevStatus, submitting: true }));
 
     try {
-      const response = await axios.post('http://localhost:8000/api/contact/submit/', formData);
+      // Get auth token from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add authorization header if token exists
+      if (user && user.token) {
+        headers['Authorization'] = `Bearer ${user.token}`;
+      }
+
+      const response = await axios.post('http://localhost:8000/api/contact/submit/', formData, { headers });
 
       setStatus({
         submitted: true,
@@ -165,7 +177,7 @@ const Contact = () => {
         submitting: false,
         info: {
           error: true,
-          msg: error.response ? error.response.data.message : 'Something went wrong. Please try again later.'
+          msg: error.response ? error.response.data.message || 'Authentication required. Please log in.' : 'Something went wrong. Please try again later.'
         }
       });
     }
@@ -176,13 +188,34 @@ const Contact = () => {
     setMeetingStatus(prevStatus => ({ ...prevStatus, submitting: true }));
 
     try {
-      // Send meeting data to the backend API
-      const response = await axios.post('http://localhost:8000/api/contact/meetings/book/', meetingData);
+      // Get auth token from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add authorization header if token exists
+      if (user && user.token) {
+        headers['Authorization'] = `Bearer ${user.token}`;
+      }
+      
+      console.log('Sending meeting data:', meetingData);
+      console.log('With headers:', headers);
+      
+      // Send meeting data to the backend API with auth headers
+      const response = await axios({
+        method: 'post',
+        url: 'http://localhost:8000/api/contact/meetings/book/',
+        data: meetingData,
+        headers: headers
+      });
+      
+      console.log('Meeting booking response:', response.data);
       
       setMeetingStatus({
         submitted: true,
         submitting: false,
-        info: { error: false, msg: response.data.message }
+        info: { error: false, msg: response.data.message || 'Meeting scheduled successfully!' }
       });
 
       // Clear form
@@ -207,12 +240,19 @@ const Contact = () => {
       }, 5000);
 
     } catch (error) {
+      console.error('Meeting booking error:', error);
+      console.error('Error details:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      
       setMeetingStatus({
         submitted: false,
         submitting: false,
         info: {
           error: true,
-          msg: error.response ? error.response.data.message : 'Unable to schedule meeting. Please try again later.'
+          msg: error.response ? error.response.data.message || error.response.data.detail || 'Authentication required. Please log in.' : 'Unable to schedule meeting. Please try again later.'
         }
       });
     }
@@ -590,10 +630,10 @@ const Contact = () => {
                     </div>
                   </div>
                   
-                  {meetingStatus.info.msg && (
+                  {(meetingStatus.submitted || meetingStatus.info.msg) && (
                     <div className={`meeting-status ${meetingStatus.info.error ? 'status-error' : 'status-success'}`}>
                       <span className="status-icon">{meetingStatus.info.error ? '❌' : '✅'}</span>
-                      <span className="status-text">{meetingStatus.info.msg}</span>
+                      <span className="status-text">{meetingStatus.info.msg || 'Meeting scheduled successfully!'}</span>
                     </div>
                   )}
                   
@@ -860,7 +900,7 @@ const Contact = () => {
                       <span className="channel-icon">📞</span>
                       <div className="channel-details">
                         <h4 className="channel-name">Phone</h4>
-                        <p className="channel-value">(555) 123-4567</p>
+                        <p className="channel-value">9179001399</p>
                       </div>
                     </div>
                     
@@ -868,7 +908,7 @@ const Contact = () => {
                       <span className="channel-icon">🏢</span>
                       <div className="channel-details">
                         <h4 className="channel-name">Office</h4>
-                        <p className="channel-value">Student Center, Room 204</p>
+                        <p className="channel-value">Zone 2 ,Miracle IT Career Academy,Akriti Complex,Maharan Pratap Nagar Bhopal,Madhya Pradesh</p>
                       </div>
                     </div>
                   </div>

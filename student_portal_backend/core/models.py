@@ -134,3 +134,14 @@ class Question(models.Model):
 
     class Meta:
         ordering = ['id']
+
+class TestResult(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='test_results')
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='test_results')
+    score = models.IntegerField()
+    total_questions = models.IntegerField()
+    percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    date_taken = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.student.username} - {self.topic.name} - {self.score}/{self.total_questions}"

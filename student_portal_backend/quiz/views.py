@@ -1,30 +1,42 @@
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Question
-from .serializers import QuestionSerializer
-import random
-from .models import Score
-from .serializers import ScoreSerializer
+from rest_framework import status
+from .models import QuizPoints
+from .serializers import QuizPointsSerializer
 
-@api_view(['POST'])
-def submit_score(request):
-    serializer = ScoreSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"status": "score saved"})
-    return Response(serializer.errors, status=400)
-
-@api_view(['GET'])
-def get_questions(request, subject):
-    questions = Question.objects.filter(subject__name=subject)
-    random_questions = random.sample(list(questions), min(5, len(questions)))
-    serializer = QuestionSerializer(random_questions, many=True)
-    data = []
-    for item in serializer.data:
-        data.append({
-            "id": item["id"],
-            "question": item["text"],
-            "options": [item["option_a"], item["option_b"], item["option_c"], item["option_d"]],
-            "answer": item["correct_option"]
-        })
-    return Response(data)
+class QuizPointsView(APIView):
+    def get(self, request):
+        user = request.user
+        guest_id = request.query_params.get('guest_id', None)
+        
+        if user.is_authenticated:
+            # Get points for logged-in user
+            points_obj, created = QuizPoints.objects.get_or_create(user=user)
+        elif guest_id:
+            # Get points for guest user
+            points_obj, created = QuizPoints.objects.get_or_create(guest_id=guest_id)
+        else:
+            return Response({"error": "Authentication required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = QuizPointsSerializer(points_obj)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        user = request.user
+        guest_id = request.data.get('guest_id', None)
+        points = request.data.get('points', 0)
+        
+        if user.is_authenticated:
+            # Update points for logged-in user
+            points_obj, created = QuizPoints.objects.get_or_create(user=user)
+        elif guest_id:
+            # Update points for guest user
+            points_obj, created = QuizPoints.objects.get_or_create(guest_id=guest_id)
+        else:
+            return Response({"error": "Authentication required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        points_obj.points = points
+        points_obj.save()
+        
+        serializer = QuizPointsSerializer(points_obj)
+        return Response(serializer.data)

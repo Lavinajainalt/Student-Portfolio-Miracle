@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/', include('core.urls')),  # Add core URLs for authentication
     path('api/quiz/', include('quiz.urls')),  # Add quiz URLs
     path('api/community/', include('community.urls')),  # Add community URLs
+    path('api/student/', include('projects.urls')),  # Add projects URLs
 ]
 
 # Serve media files in development

@@ -27,4 +27,5 @@ urlpatterns = [
     path('courses/questions/<int:topic_id>/', views.QuestionViewSet.as_view({'get': 'list'}), name='questions-list'),
     path('courses/submit-test/', views.submit_test, name='submit-test'),
     path('courses/get-questions/', views.get_subject_questions, name='get-questions'),
+    path('courses/test-results/', views.get_test_results, name='test-results'),
 ]

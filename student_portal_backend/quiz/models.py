@@ -1,16 +1,10 @@
 from django.db import models
+from django.conf import settings
 
-class Question(models.Model):
-    subject = models.CharField(max_length=100)
-    question = models.TextField()
-    options = models.JSONField(default=list)
-    answer = models.CharField(max_length=255)
-
+class QuizPoints(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    guest_id = models.CharField(max_length=100, null=True, blank=True)
+    points = models.IntegerField(default=0)
+    
     def __str__(self):
-        return self.question
-# models.py
-class Score(models.Model):
-    player_name = models.CharField(max_length=100, default="Anonymous")
-    subject = models.CharField(max_length=100)
-    score = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+        return f"{self.user.username if self.user else self.guest_id} - {self.points} points"

@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import (
     CustomUser, Subject, StudentSubject,
-    Video, FeeStructure, FeeInstallment, Payment, Topic, Question
+    Video, FeeStructure, FeeInstallment, Payment, Topic, Question, TestResult
 )
 from django.db.models import Sum, Count
 from django.utils import timezone
@@ -17,7 +17,8 @@ from datetime import timedelta
 from django.db.models import Q
 import time
 from .serializers import (
-    UserSerializer, SubjectSerializer, VideoSerializer, TopicSerializer, QuestionSerializer
+    UserSerializer, SubjectSerializer, VideoSerializer, TopicSerializer, QuestionSerializer,
+    TestResultSerializer
 )
 import random
 import time
@@ -34,6 +35,14 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return [AllowAny()]
         return super().get_permissions()
+    
+    def get_queryset(self):
+        # Faculty can filter users by role
+        if self.request.user.role == 'faculty':
+            role = self.request.query_params.get('role')
+            if role:
+                return CustomUser.objects.filter(role=role)
+        return super().get_queryset()
 
 class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all()
@@ -41,8 +50,13 @@ class SubjectViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Both faculty and students can access subjects
+        # Students only see their assigned subjects
         if self.request.user.role == 'student':
             return Subject.objects.filter(studentsubject__student=self.request.user)
+        # Faculty can see all subjects
+        elif self.request.user.role == 'faculty':
+            return Subject.objects.all()
         return super().get_queryset()
 
 
@@ -64,6 +78,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.role == 'student':
+            # Get the topic_id from the URL parameters
+            topic_id = self.kwargs.get('topic_id')
+            if topic_id:
+                # Filter questions by both student's subjects and the specific topic
+                return Question.objects.filter(
+                    topic_id=topic_id,
+                    topic__subject__studentsubject__student=self.request.user
+                )
+            # If no topic_id is provided, return questions from all topics the student has access to
             return Question.objects.filter(topic__subject__studentsubject__student=self.request.user)
         return super().get_queryset()
 
@@ -81,6 +104,38 @@ def get_subject_questions(request):
     except Question.DoesNotExist:
         return Response({'error': 'Questions not found'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_test_results(request):
+    """Get test results for faculty or student."""
+    if request.user.role == 'faculty':
+        # Faculty can see all results
+        results = TestResult.objects.all().order_by('-date_taken')
+        
+        # Filter by student if provided
+        student_id = request.query_params.get('student_id')
+        if student_id:
+            results = results.filter(student_id=student_id)
+            
+        # Filter by subject if provided
+        subject_id = request.query_params.get('subject_id')
+        if subject_id:
+            results = results.filter(topic__subject_id=subject_id)
+            
+        # Filter by topic if provided
+        topic_id = request.query_params.get('topic_id')
+        if topic_id:
+            results = results.filter(topic_id=topic_id)
+            
+    elif request.user.role == 'student':
+        # Students can only see their own results
+        results = TestResult.objects.filter(student=request.user).order_by('-date_taken')
+    else:
+        return Response({'error': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
+    
+    serializer = TestResultSerializer(results, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -89,7 +144,7 @@ def submit_test(request):
     if request.user.role != 'student':
         return Response({'error': 'Only students can submit tests'}, status=status.HTTP_403_FORBIDDEN)
     
-    answers = request.data.get('answers', {})
+    answers = request.data.get('answers', [])
     if not answers:
         return Response({'error': 'No answers provided'}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -97,18 +152,49 @@ def submit_test(request):
     score = 0
     total_questions = len(answers)
     
-    for question_id, answer in answers.items():
+    # Get the topic ID from the first question
+    if total_questions > 0:
+        first_question_id = answers[0].get('question_id')
+        try:
+            question = Question.objects.get(id=first_question_id)
+            topic_id = question.topic_id
+        except Question.DoesNotExist:
+            return Response({'error': 'Invalid question ID'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'error': 'No answers provided'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    for answer_data in answers:
+        question_id = answer_data.get('question_id')
+        selected_answer = answer_data.get('selected_answer')
+        
         try:
             question = Question.objects.get(id=question_id)
-            if question.correct_answer == answer:
+            correct_option = question.correct_answer  # This is 'option_a', 'option_b', etc.
+            
+            # Get the actual text value of the correct option
+            correct_value = getattr(question, correct_option)
+            
+            if selected_answer == correct_value:
                 score += 1
         except Question.DoesNotExist:
             continue
     
+    # Calculate percentage
+    percentage = (score / total_questions) * 100 if total_questions > 0 else 0
+    
+    # Save the test result
+    TestResult.objects.create(
+        student=request.user,
+        topic_id=topic_id,
+        score=score,
+        total_questions=total_questions,
+        percentage=percentage
+    )
+    
     return Response({
-        'score': score,
+        'correct_answers': score,
         'total_questions': total_questions,
-        'percentage': (score / total_questions) * 100 if total_questions > 0 else 0
+        'percentage': percentage
     })
 
 
@@ -135,12 +221,32 @@ class FeeManagementViewSet(viewsets.GenericViewSet):
                 fee_structure=fee_structure
             ).order_by('installment_number')
 
-            # Calculate total paid amount
+            # Calculate total paid amount based on actual payments, not just installment status
             total_paid = Payment.objects.filter(
                 installment__in=installments,
                 status='SUCCESS'
             ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            # Check for inconsistencies between Payment records and FeeInstallment status
+            for installment in installments:
+                payment_exists = Payment.objects.filter(
+                    installment=installment,
+                    status='SUCCESS'
+                ).exists()
+                
+                # If there's no payment record but the installment is marked as PAID,
+                # update the installment status to PENDING
+                if not payment_exists and installment.status == 'PAID':
+                    installment.status = 'PENDING'
+                    installment.save()
+                    print(f"Fixed inconsistency: Reset installment {installment.id} to PENDING")
 
+            # Refresh the installments after potential status updates
+            installments = FeeInstallment.objects.filter(
+                student=request.user,
+                fee_structure=fee_structure
+            ).order_by('installment_number')
+            
             # Get pending and overdue installments
             pending_installments = installments.filter(status='PENDING')
             overdue_installments = installments.filter(
@@ -167,9 +273,6 @@ class FeeManagementViewSet(viewsets.GenericViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        except FeeStructure.DoesNotExist:
-            return Response({"error": "Fee structure not found"}, status=status.HTTP_404_NOT_FOUND)
-
     @action(detail=False, methods=['post'])
     def initiate_payment(self, request):
         """Process tuition fee payment."""
@@ -186,12 +289,21 @@ class FeeManagementViewSet(viewsets.GenericViewSet):
             try:
                 installment = FeeInstallment.objects.get(
                     id=installment_id,
-                    student=request.user,
-                    status='PENDING'
+                    student=request.user
                 )
+                
+                # Check if the installment is already paid
+                if installment.status == 'PAID':
+                    # Reset the status to PENDING since admin deleted the payment
+                    installment.status = 'PENDING'
+                    installment.save()
+                    
+                    # Log this action for debugging
+                    print(f"Reset installment {installment_id} status to PENDING for user {request.user.username}")
+                
             except FeeInstallment.DoesNotExist:
                 return Response({
-                    "error": "Invalid or non-pending installment"
+                    "error": "Invalid installment"
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # Generate transaction ID

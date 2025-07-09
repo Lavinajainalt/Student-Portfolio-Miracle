@@ -1,9 +1,6 @@
 from django.urls import path
-from .views import get_questions, submit_score
-
+from .views import QuizPointsView
 
 urlpatterns = [
-    path('<str:subject>/', get_questions, name='get_questions'),
-    path('submit-score/', submit_score, name='submit_score'),
+    path('points/', QuizPointsView.as_view(), name='quiz_points'),
 ]
-

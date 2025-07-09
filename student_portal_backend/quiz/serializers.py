@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from .models import Question, Score
+from .models import QuizPoints
 
-class QuestionSerializer(serializers.ModelSerializer):
+class QuizPointsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Question
-        fields = '__all__'
-
-class ScoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Score
-        fields = '__all__'
+        model = QuizPoints
+        fields = ['id', 'user', 'guest_id', 'points']

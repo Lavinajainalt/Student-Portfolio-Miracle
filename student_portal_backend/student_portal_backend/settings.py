@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'contact',
     'quiz',
     'community',
+    'projects',
 ]
 
 AUTH_USER_MODEL = 'core.CustomUser'

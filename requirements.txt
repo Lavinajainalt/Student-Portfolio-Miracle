@@ -4,3 +4,4 @@ drf-nested-routers>=0.93.0
 django-cors-headers>=3.7.0
 channels>=3.0.0
 channels-redis>=3.3.0 
+gunicorn
